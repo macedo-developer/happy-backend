@@ -1,5 +1,11 @@
-import express from "express";
+import express from 'express'
 
-const app = express();
+const app = express()
 
-app.listen(3333);
+app.use(express.json())
+
+app.get('/orphanages', (request, response) => {
+    return response.json({ user: 'Renata Macedo' })
+})
+
+app.listen(3333)
