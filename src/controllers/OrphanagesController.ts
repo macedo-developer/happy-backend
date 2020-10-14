@@ -18,11 +18,9 @@ export default {
         const { id } = request.params
         const orphanagesRepository = getRepository(Orphanage)
 
-        const orphanage = await orphanagesRepository.findOne(id, {
+        const orphanage = await orphanagesRepository.findOneOrFail(id, {
             relations: ['images'],
         })
-
-        if (!orphanage) return response.status(400).json({ message: 'Orphanage not found' })
 
         return response.json(orphanagesView.render(orphanage))
     },
