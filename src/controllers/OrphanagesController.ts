@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
 import { getRepository } from 'typeorm'
-import Orphanages from '../models/Orphanages'
+import Orphanage from '../models/Orphanage'
 
 export default {
     async index(resquest: Request, response: Response) {
-        const orphanagesRepository = getRepository(Orphanages)
+        const orphanagesRepository = getRepository(Orphanage)
 
         const orphanages = await orphanagesRepository.find()
 
@@ -12,7 +12,7 @@ export default {
     },
     async show(request: Request, response: Response) {
         const { id } = request.params
-        const orphanagesRepository = getRepository(Orphanages)
+        const orphanagesRepository = getRepository(Orphanage)
 
         const orphanage = await orphanagesRepository.findOne(id)
 
@@ -23,7 +23,13 @@ export default {
     async create(request: Request, response: Response) {
         const { name, latitude, longitude, about, instructions, opening_hours, open_on_weekends } = request.body
 
-        const orphanagesRepository = getRepository(Orphanages)
+        const orphanagesRepository = getRepository(Orphanage)
+
+        const requestImage = request.files as Express.Multer.File[]
+
+        const images = requestImage.map((image) => {
+            return { path: image.filename }
+        })
 
         const orphanage = orphanagesRepository.create({
             name,
@@ -33,6 +39,7 @@ export default {
             instructions,
             opening_hours,
             open_on_weekends,
+            images,
         })
 
         await orphanagesRepository.save(orphanage)
